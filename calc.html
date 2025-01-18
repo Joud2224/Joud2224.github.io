@@ -1,0 +1,111 @@
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>YouTube Playlist Duration Calculator</title>
+     <style>
+         body {
+             font-family: Arial, sans-serif;
+             padding: 20px;
+         }
+         #result {
+             margin-top: 20px;
+             font-weight: bold;
+         }
+         #plan {
+             margin-top: 20px;
+             font-weight: normal;
+         }
+     </style>
+ </head>
+ <body>
+ 
+     <h1>YouTube Playlist Duration Calculator</h1>
+     <input type="text" id="playlistId" placeholder="Enter Playlist ID">
+     <button id="calculateBtn">Calculate Duration</button>
+     <div id="result"></div>
+     <div id="plan"></div>
+ 
+     <script>
+         const API_KEY = 'AIzaSyAksgqgFnYaPGX8lKnOHNwJENsau3I5pZ4'; // Replace with your YouTube Data API key
+ 
+         async function getPlaylistItems(playlistId) {
+             const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${playlistId}&maxResults=50&key=${API_KEY}`;
+             let totalDuration = 0;
+             let nextPageToken = '';
+ 
+             do {
+                 const response = await fetch(url + (nextPageToken ? `&pageToken=${nextPageToken}` : ''));
+                 const data = await response.json();
+                 totalDuration += await calculateTotalDuration(data.items);
+                 nextPageToken = data.nextPageToken;
+             } while (nextPageToken);
+ 
+             return totalDuration;
+         }
+ 
+         async function calculateTotalDuration(items) {
+             let total = 0;
+             for (const item of items) {
+                 const videoId = item.contentDetails.videoId;
+                 const videoDetails = await getVideoDetails(videoId);
+                 if (videoDetails) {
+                     total += videoDetails.contentDetails.duration;
+                 }
+             }
+             return total;
+         }
+ 
+         async function getVideoDetails(videoId) {
+             const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoId}&key=${API_KEY}`;
+             const response = await fetch(url);
+             const data = await response.json();
+             if (data.items.length) {
+                 const duration = data.items[0].contentDetails.duration;
+                 return { contentDetails: { duration: parseISO8601Duration(duration) } };
+             }
+             return null;
+         }
+ 
+         function parseISO8601Duration(duration) {
+             const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+             const matches = duration.match(regex);
+             const hours = parseInt(matches[1] || 0, 10);
+             const minutes = parseInt(matches[2] || 0, 10);
+             const seconds = parseInt(matches[3] || 0, 10);
+             return hours * 60 + minutes + seconds / 60; // Return total time in minutes
+         }
+ 
+         function calculatePlan(totalMinutes) {
+             const totalHours = totalMinutes / 60;
+             const days = 5;
+             const dailyHours = 9;
+             const totalAvailableHours = days * dailyHours;
+ 
+             let plan = '';
+             if (totalHours <= totalAvailableHours) {
+                 plan += `You can finish the playlist in ${Math.ceil(totalHours / dailyHours)} day(s). `;
+             } else {
+                 const hoursPerDay = (totalMinutes / days) / 60;
+                 plan += `You will need to spend approximately ${hoursPerDay.toFixed(2)} hours per day to finish the playlist in ${days} days. `;
+             }
+ 
+             const remainingMinutes = totalMinutes % (dailyHours * 60);
+             const remainingHours = Math.floor(remainingMinutes / 60);
+             plan += `Total Duration: ${Math.floor(totalMinutes / 60)} hours and ${totalMinutes % 60} minutes.`;
+             return plan;
+         }
+ 
+         document.getElementById('calculateBtn').addEventListener('click', async () => {
+             const playlistId = document.getElementById('playlistId').value;
+             const totalMinutes = await getPlaylistItems(playlistId);
+             const plan = calculatePlan(totalMinutes);
+             document.getElementById('result').textContent = `Total Duration: ${Math.floor(totalMinutes / 60)} hours and ${totalMinutes % 60} minutes.`;
+             document.getElementById('plan').textContent = plan;
+         });
+     </script>
+ 
+ </body>
+ </html>

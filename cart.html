@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-logo" id="logo">
+        <a href="/index.html">Leaf & Bloom</a>
+      </div>
+      <div class="hamburger" id="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+      <ul class="navbar-list" id="navbar-list">
+        <li class="navbar-item">
+          <a href="/index.html" class="menu-link">Home</a>
+        </li>
+        <li class="navbar-item">
+          <a href="/products.html" class="menu-link">Products</a>
+        </li>
+        <li class="navbar-item">
+          <a href="/aboutus.html" class="menu-link">About Us</a>
+        </li>
+        <li class="navbar-item">
+          <a href="cart.html" class="menu-link"
+            ><i class="fas fa-shopping-cart" id="cart-nav" data-count="0"></i
+          ></a>
+        </li>
+        <li class="navbar-item">
+          <a href="/contact.html" class="menu-link">Contact Us</a>
+        </li>
+      </ul>
+    </nav>
+    <main>
+      <section>
+        <div class="container" id="cart-container"></div>
+      </section>
+      <div class="cart-actions">
+        <button class="checkout-btn">Proceed to Checkout</button>
+        <button class="empty-cart-btn" >Empty Cart</button>
+      </div>
+      <button id="scroll-up">Up</button>
+    </main>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const cartContainer = document.getElementById("cart-container");
+        const cartNav = document.getElementById("cart-nav");
+        function updateCartDisplay() {
+          cartContainer.innerHTML = "";
+        if (cart.length > 0) {
+          cart.forEach((item) => {
+            const productDiv = document.createElement("div");
+            productDiv.classList.add("product");
+            productDiv.innerHTML = `
+                    <h2>${item.name}</h2>
+                    <img src="${item.image}" alt="${item.name}" />
+                    <p>Price: $${item.price}</p>
+                    `;
+            cartContainer.appendChild(productDiv);
+          });
+        } else {
+          cartContainer.innerHTML = "<p>Your cart is empty!</p>";
+        }
+        cartNav.setAttribute("data-count", cart.length);
+      }
+      updateCartDisplay();
+
+      emptyCartButton.addEventListener("click", function () {
+                localStorage.removeItem("cart"); // Clear cart from local storage
+                cart.length = 0; // Clear the cart array
+                cartNav.setAttribute("data-count", 0); // Set cart icon count to 0 immediately
+                updateCartDisplay(); // Update the display
+            });
+
+      document.getElementById("empty-cart").addEventListener("click", function () {
+                localStorage.removeItem("cart"); // Clear cart from local storage
+                cart.length = 0; // Clear the cart array
+                updateCartDisplay(); // Update the display
+            });
+      });
+    </script>
+    <footer>
+      <p>This is &copy; our copyrights footer section</p>
+    </footer>
+    <script src="main.js"></script>
+  </body>
+</html>
+
+<!-- <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Products</title>
+      <link rel="stylesheet" href="styles.css" />
+      <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
+
+  </head>
+  <body>
+    <nav class="navbar"> 
+      <div class="navbar-logo" id="logo">
+      <a href="/index.html">Leaf & Bloom</a>
+      </div>
+    <div class="hamburger" id="hamburger">
+      <i class="fas fa-bars"></i>
+  </div>
+      <ul class="navbar-list" id="navbar-list">
+        <li class="navbar-item">
+          <a href="/index.html"  class="active menu-link">
+            Home
+          </a>
+        </li>
+        <li class="navbar-item">
+          <a href="/products.html" class="menu-link">
+            Products
+          </a>
+        </li>
+        <li class="navbar-item">
+          <a href="/aboutus.html" class="menu-link">
+            About Us
+          </a>
+        </li>
+        <li class="navbar-item">
+          <a href="cart.html" class="menu-link">
+            <i class="fas fa-shopping-cart" id="cart-nav" data-count= 0></i>
+          </a>
+        </li>
+        <li class="navbar-item">
+          <a href="/contact.html" class="menu-link">Contact Us</a>
+        </li>
+      </ul>
+    </nav>
+    <main>
+      <section>
+        <div class="container">
+        </div>
+      </section>
+    </main>
+    <br>
+    
+   
+    <script src="main.js"></script>
+    <script>
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cartContainer = document.getElementById("cart-container");
+
+      if (cart.length > 0) {
+          cart.forEach(item => {
+              const productDiv = document.createElement("div");
+              productDiv.classList.add("product");
+              productDiv.innerHTML = `
+                  <h2>${item.name}</h2>
+                  <img src="${item.image}" alt="${item.name}" />
+                  <p>Price: $${item.price}</p>
+              `;
+              cartContainer.appendChild(productDiv);
+          });
+      } else {
+          cartContainer.innerHTML = "<p>Your cart is empty!</p>";
+      }
+  </script>
+   <footer>
+    <p>This is &copy; our copyrights footer section</p>
+  </footer>
+  </body>
+</html> -->
