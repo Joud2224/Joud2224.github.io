@@ -24,17 +24,17 @@ myBtns.forEach(function (myBtn, index) {
   };
 });
 
-var cart = 0;
-let myBtns = document.querySelectorAll(".shop-btn");
-myBtns.forEach(function (myBtn) {
-  // Iterate over each button
-  myBtn.onclick = function () {
-    cart += 1;
-    console.log(`added to cart ${cart} times`);
-    const cartNav = document.getElementById("cart-nav");
-    cartNav.setAttribute("data-count", cart);
-  };
-});
+// var cart = 0;
+// let myBtns = document.querySelectorAll(".shop-btn");
+// myBtns.forEach(function (myBtn) {
+//   // Iterate over each button
+//   myBtn.onclick = function () {
+//     cart += 1;
+//     console.log(`added to cart ${cart} times`);
+//     const cartNav = document.getElementById("cart-nav");
+//     cartNav.setAttribute("data-count", cart);
+//   };
+// });
 
 
 document.getElementById("hamburger").addEventListener("click", function () {
@@ -43,18 +43,7 @@ document.getElementById("hamburger").addEventListener("click", function () {
 });
 
 // Change active class on menu link click
-const menuLinks = document.querySelectorAll(".menu-link");
-const activeLinkKey = "activeLink"; 
 
-function setActiveLink() {
-  const activeLink = localStorage.getItem(activeLinkKey);
-  menuLinks.forEach((link) => {
-    link.classList.remove("active");
-    if (link.href === activeLink) {
-      link.classList.add("active");
-    }
-  });
-}
 
 // Set active link on page load
 setActiveLink();
@@ -147,7 +136,8 @@ document.querySelector('.empty-cart-btn').addEventListener('click', function() {
           }
       });
   }
-
+  
+  
   // Set active link on page load
   setActiveLink();
 
